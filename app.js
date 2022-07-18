@@ -1,3 +1,5 @@
+const fs = require("fs");
+const generatePage = require("./src/page-template.js");
 const inquirer = require("inquirer");
 
 const promptUser = () => {
@@ -30,7 +32,7 @@ const promptUser = () => {
     },
     {
       type: "confirm",
-      name: "confrimAbout",
+      name: "confirmAbout",
       message:
         'Would you like to enter some information about yourself for an "About" section?',
       default: true,
@@ -39,8 +41,8 @@ const promptUser = () => {
       type: "input",
       name: "about",
       message: "Provide some information about yourself:",
-      when: ({ confrimAbout }) => {
-        if (confrimAbout) {
+      when: ({ confirmAbout }) => {
+        if (confirmAbout) {
           return true;
         } else {
           return false;
@@ -94,13 +96,12 @@ const promptProject = (portfolioData) => {
         name: "languages",
         message: "What did you build this project with? (check all that apply)",
         choices: [
-          "JavaScript",
-          "HTML",
-          "CSS",
-          "ES6",
-          "jQuery",
-          "Bootstrap",
-          "Node",
+          "JavaScript", "HTML", 
+          "CSS", 
+          "ES6", 
+          "jQuery", 
+          "Bootstrap", 
+          "Node", 
         ],
       },
       {
@@ -141,18 +142,17 @@ const promptProject = (portfolioData) => {
 promptUser()
   .then(promptProject)
   .then((portfolioData) => {
-    console.log(portfolioData);
+    const pageHTML = generatePage(portfolioData);
+
+    fs.writeFile("./index.html", pageHTML, (err) => {
+      if (err) throw Error;
+
+      console.log(
+        "Portfolio is complete! Checkout out index.html to see the output!"
+      );
+    });
   });
-// const fs = require('fs');
-// const generatePage = require('./src/page-template.js');
 
-// const pageHTML = generatePage(name, github);
-
-// fs.writeFile('./index.html', pageHTML, err => {
-//     if (err) throw Error;
-
-//     console.log('Portfolio is complete! Checkout out index.html to see the output!');
-// });
-
+// console.log(portfolioData);
 // .then(answers => console.log(answers))
 // .then(projectAnswers => console.log(projectAnswers));
